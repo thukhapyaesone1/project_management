@@ -52,14 +52,12 @@ export default function AddTask({ selectedProjectId , refreshCount}) {
 
         const success = await addNewTask(taskData);
         if (success) {
-            // Optionally reset form fields here
             setTaskName("");
             setTaskAssign("");
             setTaskStatus("pending");
             refreshCount();
             setOpen(false);
         } else {
-            // Handle failure (e.g., show error message)
             setOpen(false);
         }
         }
@@ -91,9 +89,9 @@ export default function AddTask({ selectedProjectId , refreshCount}) {
                 onClose={() => setOpen(false)}
                 PaperProps={{
                     sx: {
-                        width: 500,              // ✅ increase overall dialog width
-                        p: 3,                    // ✅ padding inside the dialog
-                        borderRadius: 3,         // optional: rounder corners
+                        width: 500,          
+                        p: 3,                  
+                        borderRadius: 3,      
                     },
                 }}
             >
@@ -101,7 +99,7 @@ export default function AddTask({ selectedProjectId , refreshCount}) {
                     sx={{
                         fontSize: 20,
                         fontWeight: 700,
-                        mb: 1,                 // ✅ adds space below title
+                        mb: 1,                
                     }}
                 >
                     Add New Task
@@ -112,7 +110,7 @@ export default function AddTask({ selectedProjectId , refreshCount}) {
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
-                        minWidth: 400,           // ✅ minimum content width
+                        minWidth: 400,
                     }}
                 >
                     <TextField

@@ -7,31 +7,49 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { addNewProject } from "../api/api";
 
-export default function HeaderWithButton({onProjectAdded}) {
+export default function HeaderWithButton({ onProjectAdded }) {
     const [open, setOpen] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState(dayjs());
 
 
-       const handleAddProject = async () => {
-        const projectData = {
-            title: projectName,
-            description: description,
-            deadline: deadline.format('YYYY-MM-DD'),
-        };
+    const handleAddProject = async () => {
 
-        const success = await addNewProject(projectData);
-        if (success) {
-            // Optionally reset form fields here
-            setProjectName("");
-            setDescription("");
-            setDeadline(dayjs());
-            setOpen(false);
-                        onProjectAdded();
+        let isInputValid = true;
 
-        }else{
-            // Handle failure (e.g., show error message)
+        if (projectName == null || projectName == "") {
+            isInputValid = false;
+
+            alert("Project name must not be empty");
+        } else if (description == null || description == "") {
+            isInputValid = false;
+
+            alert("Description must not be empty")
+        }
+        else if (deadline == null || deadline == "") {
+            isInputValid = false;
+
+            alert("Deadline must not be empty")
+        }
+        if (isInputValid) {
+            const projectData = {
+                title: projectName,
+                description: description,
+                deadline: deadline.format('YYYY-MM-DD'),
+            };
+
+            const success = await addNewProject(projectData);
+            if (success) {
+                setProjectName("");
+                setDescription("");
+                setDeadline(dayjs());
+                setOpen(false);
+                onProjectAdded();
+
+            } else {
+                alert("Failed to add project");
+            }
         }
     }
 
@@ -51,7 +69,7 @@ export default function HeaderWithButton({onProjectAdded}) {
             >
                 <h3 style={{ margin: 0 }}>Projects</h3>
                 <IconButton
-                    onClick={() => setOpen(true)} // ✅ Open dialog on click
+                    onClick={() => setOpen(true)}
                     sx={{
                         width: 24,
                         height: 24,
@@ -68,7 +86,7 @@ export default function HeaderWithButton({onProjectAdded}) {
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}
-                 slotProps={{
+                slotProps={{
                     backdrop: {
                         sx: {
                             backgroundColor: "rgba(255,255,255,0.2)",
@@ -78,9 +96,9 @@ export default function HeaderWithButton({onProjectAdded}) {
                 }}
                 PaperProps={{
                     sx: {
-                        width: 500,              // ✅ increase overall dialog width
-                        p: 3,                    // ✅ padding inside the dialog
-                        borderRadius: 3,         // optional: rounder corners
+                        width: 500,            
+                        p: 3,                    
+                        borderRadius: 3,         
                     },
                 }}
             >
@@ -88,7 +106,7 @@ export default function HeaderWithButton({onProjectAdded}) {
                     sx={{
                         fontSize: 20,
                         fontWeight: 700,
-                        mb: 1,                 // ✅ adds space below title
+                        mb: 1,                 
                     }}
                 >
                     Add New Project
@@ -99,7 +117,7 @@ export default function HeaderWithButton({onProjectAdded}) {
                         fontSize: 14,
                         fontWeight: 400,
                         mt: -2,
-                        mb: 2,                   // ✅ adds space below subtitle
+                        mb: 2,                 
                         color: "gray",
                     }}
                 >
@@ -111,7 +129,7 @@ export default function HeaderWithButton({onProjectAdded}) {
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
-                        minWidth: 400,           // ✅ minimum content width
+                        minWidth: 400,          
                     }}
                 >
                     <TextField
@@ -141,14 +159,14 @@ export default function HeaderWithButton({onProjectAdded}) {
                             slotProps={{
                                 textField: {
                                     sx: {
-                                    '& .MuiOutlinedInput-root': {
-                                        '&.Mui-focused fieldset': {
-                                        borderColor: '#5D5D5DFF', // Border when focused
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: '#5D5D5DFF', 
+                                            },
                                         },
-                                    },
-                                    '& .MuiInputLabel-root.Mui-focused': {
-                                        color: '#5D5D5DFF', // Label when focused
-                                    },
+                                        '& .MuiInputLabel-root.Mui-focused': {
+                                            color: '#5D5D5DFF', 
+                                        },
                                     },
                                 },
                             }}
@@ -157,7 +175,7 @@ export default function HeaderWithButton({onProjectAdded}) {
                     <TextField
                         label="Description"
                         variant="outlined"
-                        multiline 
+                        multiline
                         rows={3}
                         fullWidth
                         value={description}

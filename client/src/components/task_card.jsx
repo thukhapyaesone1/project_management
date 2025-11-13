@@ -57,7 +57,6 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
 
             const success = await updateTask(task.id, taskData);
             if (success) {
-                // Optionally reset form fields here
                 setTaskName("");
                 setTaskAssign("");
                 setTaskStatus("pending");
@@ -82,11 +81,8 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                     textAlign: "left",
                     p: 2,
                     mb: 1.5,
-                    // backgroundColor: "#E8E4FFFF", // task background color for In Progress tasks
-                    // backgroundColor: "#FFF0E9FF", // task background color for Pending tasks
-                    backgroundColor: backgroundColor, // task background color for Completed tasks
+                    backgroundColor: backgroundColor,
                     borderRadius: 1,
-                    // boxShadow: 1,
                     justifyContent: "space-between",
                     gap: 2,
                 }}
@@ -104,9 +100,9 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                 onClose={() => setOpen(false)}
                 PaperProps={{
                     sx: {
-                        width: 500,              // ✅ increase overall dialog width
-                        p: 3,                    // ✅ padding inside the dialog
-                        borderRadius: 3,         // optional: rounder corners
+                        width: 500,             
+                        p: 3,                  
+                        borderRadius: 3,        
                     },
                 }}
             >
@@ -114,7 +110,7 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                     sx={{
                         fontSize: 20,
                         fontWeight: 700,
-                        mb: 1,                 // ✅ adds space below title
+                        mb: 1,               
                     }}
                 >
                     Edit Task
@@ -125,7 +121,7 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
-                        minWidth: 400,           // ✅ minimum content width
+                        minWidth: 400,         
                     }}
                 >
                     <TextField

@@ -13,20 +13,39 @@ export default function ProjectDialog({ open, setOpen, projectId, name, descript
     const [deadline, setDeadline] = useState(dayjs(deadlineValue, "YYYY-MM-DD"));
 
 
-      useEffect(() => {
-    setProjectName(name);
-    setDescription(descriptionValue);
-    setDeadline(dayjs(deadlineValue, "YYYY-MM-DD"));
-  }, [name, descriptionValue, deadlineValue]);
+    useEffect(() => {
+        setProjectName(name);
+        setDescription(descriptionValue);
+        setDeadline(dayjs(deadlineValue, "YYYY-MM-DD"));
+    }, [name, descriptionValue, deadlineValue]);
 
     const saveEditedProject = async () => {
-        const res = await updateProject(projectId, {
-            title: projectName,
-            description: description,
-            deadline: deadline.format('YYYY-MM-DD'),
-        });
-        onSaveSuccess();
-        setOpen(false);
+        let isInputValid = true;
+
+        if (projectName == null || projectName == "") {
+            isInputValid = false;
+
+            alert("Project name must not be empty");
+        } else if (description == null || description == "") {
+            isInputValid = false;
+
+            alert("Description must not be empty")
+        }
+        else if (deadline == null || deadline == "") {
+            isInputValid = false;
+
+            alert("Deadline must not be empty")
+        }
+        if (isInputValid) {
+            const res = await updateProject(projectId, {
+                title: projectName,
+                description: description,
+                deadline: deadline.format('YYYY-MM-DD'),
+            });
+            onSaveSuccess();
+            setOpen(false);
+        }
+
     }
 
     console.log("Project Dialog Rendered with:", { projectId, name, descriptionValue, deadlineValue });
@@ -57,7 +76,7 @@ export default function ProjectDialog({ open, setOpen, projectId, name, descript
                     sx={{
                         fontSize: 20,
                         fontWeight: 700,
-                        mb: 1,                 // ✅ adds space below title
+                        mb: 1,
                     }}
                 >
                     Edit Project
@@ -68,7 +87,7 @@ export default function ProjectDialog({ open, setOpen, projectId, name, descript
                         fontSize: 14,
                         fontWeight: 400,
                         mt: -2,
-                        mb: 2,                   // ✅ adds space below subtitle
+                        mb: 2,
                         color: "gray",
                     }}
                 >
@@ -80,7 +99,7 @@ export default function ProjectDialog({ open, setOpen, projectId, name, descript
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
-                        minWidth: 400,           // ✅ minimum content width
+                        minWidth: 400,
                     }}
                 >
                     <TextField
@@ -112,11 +131,11 @@ export default function ProjectDialog({ open, setOpen, projectId, name, descript
                                     sx: {
                                         '& .MuiOutlinedInput-root': {
                                             '&.Mui-focused fieldset': {
-                                                borderColor: '#5D5D5DFF', // Border when focused
+                                                borderColor: '#5D5D5DFF',
                                             },
                                         },
                                         '& .MuiInputLabel-root.Mui-focused': {
-                                            color: '#5D5D5DFF', // Label when focused
+                                            color: '#5D5D5DFF',
                                         },
                                     },
                                 },

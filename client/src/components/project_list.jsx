@@ -7,7 +7,7 @@ import ProjectDialog from './project_dialog';
 export default function ProjectList({ refreshTrigger, selectProject, selectedProject, projects: initialProjects }) {
     const [projects, setProjects] = useState(initialProjects);
     const [open, setOpen] = useState(false);
-    const [editingProject, setEditingProject] = useState(null); // <- store selected project for editing
+    const [editingProject, setEditingProject] = useState(null);
 
     useEffect(() => {
         console.log("Initial Projects ", initialProjects)

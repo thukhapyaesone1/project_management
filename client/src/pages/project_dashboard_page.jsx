@@ -98,7 +98,7 @@ export default function ProjectDashboardPage() {
                         boxShadow: 1.4,
                         mx: 2,
                         p: 2,
-                        overflowY: "auto", // scroll if list is long
+                        overflowY: "auto",
                     }}
                 >
                     <SearchBox onSearch={searchKeyword} onClear={() => handleClear()} refreshPage={refreshPage} />
@@ -174,8 +174,8 @@ export default function ProjectDashboardPage() {
                             <Divider
                                 sx={{
                                     my: 2,
-                                    borderColor: "#C7C7C7FF", // Divider line color
-                                    borderBottomWidth: 1.5,     // Thickness (default is 1px)
+                                    borderColor: "#C7C7C7FF", 
+                                    borderBottomWidth: 1.5, 
                                 }}
                             />
                             {pendingTasks.map((task) => (
@@ -191,8 +191,8 @@ export default function ProjectDashboardPage() {
                             <Divider
                                 sx={{
                                     my: 2,
-                                    borderColor: "#C7C7C7FF", // Divider line color
-                                    borderBottomWidth: 1.5,     // Thickness (default is 1px)
+                                    borderColor: "#C7C7C7FF", 
+                                    borderBottomWidth: 1.5,  
                                 }}
                             />
                             {inProgressTasks.map((task) => (
@@ -208,8 +208,8 @@ export default function ProjectDashboardPage() {
                             <Divider
                                 sx={{
                                     my: 2,
-                                    borderColor: "#C7C7C7FF", // Divider line color
-                                    borderBottomWidth: 1.5,     // Thickness (default is 1px)
+                                    borderColor: "#C7C7C7FF", 
+                                    borderBottomWidth: 1.5,
                                 }}
                             />
                             {completedTasks.map((task) => (
