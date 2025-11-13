@@ -17,6 +17,7 @@ export default function ProjectDashboardPage() {
     const [pendingTasks, setPendingTasks] = useState([]);
     const [inProgressTasks, setInProgressTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
+    const [isSearch, setIsSearch] = useState(false);
 
     const refreshPage = () => {
         setRefreshCount(prev => prev + 1);
@@ -45,9 +46,10 @@ export default function ProjectDashboardPage() {
     }
 
     const searchKeyword = async (value) => {
+        setIsSearch(true);
         console.log("Search Keyword :", value)
         const data = await search(value);
-        console.log(data);
+        console.log("Projects :", data.projects);
         setProjects(data.projects);
         setTasks(data.tasks);
         setPendingTasks(data.tasks.filter((task) => task.status === "pending"));
@@ -61,7 +63,9 @@ export default function ProjectDashboardPage() {
         setPendingTasks([]);
         setInProgressTasks([]);
         setCompletedTasks([]);
+        setProject([]);
         refreshPage();
+        setIsSearch(false);
     }
 
 
@@ -105,7 +109,7 @@ export default function ProjectDashboardPage() {
 
                     <HeaderWithButton onProjectAdded={refreshPage} />
 
-                    <ProjectList projects={projects} refreshTrigger={refreshCount} selectProject={handleProjectSelect} selectedProject={selectedProject} />
+                    <ProjectList isSearchResult={isSearch} initialProjects={projects} refreshTrigger={refreshCount} selectProject={handleProjectSelect} selectedProject={selectedProject} />
                 </Box>
 
                 {/* Right box (flex 4) */}

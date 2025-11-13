@@ -197,5 +197,9 @@ app.get("/search", (req, res) => {
   );
 });
 
+db.all("SELECT title FROM projects", [], (err, rows) => {
+  console.log(rows);
+});
+
 
 app.listen(3001, () => console.log("Server running on http://localhost:3001"));

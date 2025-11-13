@@ -4,20 +4,20 @@ import { Box, Divider, IconButton, List, ListItem, ListItemText } from "@mui/mat
 import { useEffect, useState } from 'react';
 import { deleteProject, getProjects } from '../api/api';
 import ProjectDialog from './project_dialog';
-export default function ProjectList({ refreshTrigger, selectProject, selectedProject, projects: initialProjects }) {
-    const [projects, setProjects] = useState(initialProjects);
+export default function ProjectList({ refreshTrigger, selectProject, selectedProject, initialProjects, isSearchResult }) {
+    const [projects, setProjects] = useState([]);
     const [open, setOpen] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
 
     useEffect(() => {
         console.log("Initial Projects ", initialProjects)
-        if (initialProjects.length == 0) {
+        if (!isSearchResult) {
             fetchData();
         } else {
             setProjects(initialProjects);
-            console.log("Project : ", projects)
+            console.log("Project : ", initialProjects)
         }
-    }, [refreshTrigger]);
+    }, [refreshTrigger, initialProjects, isSearchResult]);
 
     const fetchData = async () => {
         const data = await getProjects();
