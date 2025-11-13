@@ -1,22 +1,16 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
-export default function SearchBox({ onSearch, onClear, refreshPage }) {
+const SearchBox = forwardRef(({ onSearch, onClear }, ref) => {
   const [query, setQuery] = useState("");
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    if (value === "") {
-      handleClear();
-      return;
-    } else {
-      setQuery(value);
-      if (onSearch) onSearch(value);
-      refreshPage();
+  const handleSearch = async (value) => {
+    setQuery(value);
+    if (value.trim() !== "" && onSearch) {
+      await onSearch(value);
     }
-
   };
 
   const handleClear = () => {
@@ -24,13 +18,26 @@ export default function SearchBox({ onSearch, onClear, refreshPage }) {
     if (onClear) onClear();
   };
 
+  // ✅ Expose this method to parent
+  useImperativeHandle(ref, () => ({
+    triggerSearch(value) {
+      handleSearch(value);
+    },
+    clear() {
+      handleClear();
+    },
+    getValue() {
+      return query;
+    },
+  }));
+
   return (
     <Box sx={{ width: "100%", maxWidth: 400 }}>
       <TextField
         fullWidth
         placeholder="Search Projects or Tasks"
         value={query}
-        onChange={handleSearch}
+        onChange={(e) => handleSearch(e.target.value)}
         variant="outlined"
         size="small"
         sx={{
@@ -62,4 +69,6 @@ export default function SearchBox({ onSearch, onClear, refreshPage }) {
       />
     </Box>
   );
-}
+});
+
+export default SearchBox;

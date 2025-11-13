@@ -1,5 +1,5 @@
 import { Box, Divider, Typography } from "@mui/material";
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { getTasks, search } from "../api/api.jsx";
 import AddTask from "../components/add_task.jsx";
 import HeaderWithButton from "../components/header_with_button.jsx";
@@ -18,6 +18,7 @@ export default function ProjectDashboardPage() {
     const [inProgressTasks, setInProgressTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [isSearch, setIsSearch] = useState(false);
+    const searchRef = useRef();
 
     const refreshPage = () => {
         setRefreshCount(prev => prev + 1);
@@ -25,6 +26,8 @@ export default function ProjectDashboardPage() {
 
     const fetchTasks = async (projectId) => {
         console.log("Project Id :", projectId);
+
+
         const data = await getTasks(projectId);
         setTasks(data);
 
@@ -35,7 +38,8 @@ export default function ProjectDashboardPage() {
         setPendingTasks(pending);
         setInProgressTasks(inProgress);
         setCompletedTasks(completed);
-    }
+    };
+
 
     const handleProjectSelect = async (value) => {
         console.log(selectedProject?.title ?? "null")
@@ -43,6 +47,14 @@ export default function ProjectDashboardPage() {
         if (value?.id != null) {
             await fetchTasks(value.id);
         }
+    }
+
+    const handleProjectDelete = () => {
+        setProject(null);
+        setTasks([]);
+        setPendingTasks([]);
+        setInProgressTasks([]);
+        setCompletedTasks([]);
     }
 
     const searchKeyword = async (value) => {
@@ -63,7 +75,7 @@ export default function ProjectDashboardPage() {
         setPendingTasks([]);
         setInProgressTasks([]);
         setCompletedTasks([]);
-        setProject([]);
+        setProject(null);
         refreshPage();
         setIsSearch(false);
     }
@@ -105,11 +117,14 @@ export default function ProjectDashboardPage() {
                         overflowY: "auto",
                     }}
                 >
-                    <SearchBox onSearch={searchKeyword} onClear={() => handleClear()} refreshPage={refreshPage} />
+                    <SearchBox ref={searchRef} onSearch={searchKeyword} onClear={() => handleClear()} refreshPage={refreshPage} />
 
                     <HeaderWithButton onProjectAdded={refreshPage} />
 
-                    <ProjectList isSearchResult={isSearch} initialProjects={projects} refreshTrigger={refreshCount} selectProject={handleProjectSelect} selectedProject={selectedProject} />
+                    <ProjectList onEditSuccess={(project)=>{
+                        console.log("Edited project in dashboard:", project);
+                        setProject(project);
+                    }} onDeleteSuccess={handleProjectDelete} isSearchResult={isSearch} initialProjects={projects} refreshTrigger={refreshCount} selectProject={handleProjectSelect} selectedProject={selectedProject} />
                 </Box>
 
                 {/* Right box (flex 4) */}
@@ -146,6 +161,18 @@ export default function ProjectDashboardPage() {
                         >
                             Description : {selectedProject?.description ?? "N/A"}
                         </Typography>
+                         <Typography
+                            sx={{
+                                textAlign: "left",
+                                color: "black",
+                                fontWeight: "normal",
+                                fontSize: 16,
+                                pl: 2,
+                                pb: 2,
+                            }}
+                        >
+                            Deadline : {selectedProject?.deadline ?? "N/A"}
+                        </Typography>
                     </Box>
                     {/* Progress Visualization Part */}
                     <Box
@@ -178,12 +205,19 @@ export default function ProjectDashboardPage() {
                             <Divider
                                 sx={{
                                     my: 2,
-                                    borderColor: "#C7C7C7FF", 
-                                    borderBottomWidth: 1.5, 
+                                    borderColor: "#C7C7C7FF",
+                                    borderBottomWidth: 1.5,
                                 }}
                             />
                             {pendingTasks.map((task) => (
-                                <TaskCard key={task.id} task={task} backgroundColor={"#FBD398FF"} refreshPage={() => fetchTasks(task.project_id)} />
+                                <TaskCard key={task.id} task={task} backgroundColor={"#FBD398FF"} refreshPage={() => {
+                                    if (isSearch && searchRef.current) {
+                                        searchKeyword(searchRef.current.getValue());
+                                    } else {
+                                        fetchTasks(task.project_id)
+                                    }
+
+                                }} />
                             ))}
                         </Box>
 
@@ -195,8 +229,8 @@ export default function ProjectDashboardPage() {
                             <Divider
                                 sx={{
                                     my: 2,
-                                    borderColor: "#C7C7C7FF", 
-                                    borderBottomWidth: 1.5,  
+                                    borderColor: "#C7C7C7FF",
+                                    borderBottomWidth: 1.5,
                                 }}
                             />
                             {inProgressTasks.map((task) => (
@@ -212,7 +246,7 @@ export default function ProjectDashboardPage() {
                             <Divider
                                 sx={{
                                     my: 2,
-                                    borderColor: "#C7C7C7FF", 
+                                    borderColor: "#C7C7C7FF",
                                     borderBottomWidth: 1.5,
                                 }}
                             />

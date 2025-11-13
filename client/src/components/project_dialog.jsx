@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { useEffect, useState } from 'react';
 import { updateProject } from "../api/api";
 
-export default function ProjectDialog({ open, setOpen, projectId, name, descriptionValue, deadlineValue, onSaveSuccess }) {
+export default function ProjectDialog({ open, setOpen, projectId, name, descriptionValue, deadlineValue, onSaveSuccess}) {
 
     const [projectName, setProjectName] = useState(name);
     const [description, setDescription] = useState(descriptionValue);

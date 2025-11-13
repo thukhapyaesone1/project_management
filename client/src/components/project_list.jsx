@@ -4,7 +4,7 @@ import { Box, Divider, IconButton, List, ListItem, ListItemText } from "@mui/mat
 import { useEffect, useState } from 'react';
 import { deleteProject, getProjects } from '../api/api';
 import ProjectDialog from './project_dialog';
-export default function ProjectList({ refreshTrigger, selectProject, selectedProject, initialProjects, isSearchResult }) {
+export default function ProjectList({ refreshTrigger, selectProject, selectedProject, initialProjects, isSearchResult, onDeleteSuccess , onEditSuccess}) {
     const [projects, setProjects] = useState([]);
     const [open, setOpen] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
@@ -22,6 +22,7 @@ export default function ProjectList({ refreshTrigger, selectProject, selectedPro
     const fetchData = async () => {
         const data = await getProjects();
         setProjects(data);
+        return data;
     };
 
     const handleEditClick = (project) => {
@@ -33,7 +34,14 @@ export default function ProjectList({ refreshTrigger, selectProject, selectedPro
     const handleProjectDelete = async (projectId) => {
         await deleteProject(projectId);
         await fetchData();
+        onDeleteSuccess();
     };
+
+    const onSaveSuccessDialog = async () => {
+        const data = await fetchData();
+        setEditingProject(data.find(p => p.id === editingProject.id));
+        onEditSuccess(data.find(p => p.id === editingProject.id));
+    }
 
     return (
         <>
@@ -102,7 +110,7 @@ export default function ProjectList({ refreshTrigger, selectProject, selectedPro
                     name={editingProject.title}
                     descriptionValue={editingProject.description}
                     deadlineValue={editingProject.deadline}
-                    onSaveSuccess={fetchData}
+                    onSaveSuccess={onSaveSuccessDialog}
                 />
             )}
         </>

@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from "@mui/material/TextField";
 import { useState } from 'react';
-import { updateTask } from '../api/api';
+import { deleteTask, updateTask } from '../api/api';
 
 export default function TaskCard({ task, backgroundColor, refreshPage }) {
 
@@ -70,6 +70,14 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
 
     }
 
+    const handleDeleteTask = async () => {
+        const success = await deleteTask(task.id);
+        if (success) {
+            setOpen(false);
+            await refreshPage();
+        }
+    }
+
 
     return (
         <>
@@ -100,9 +108,9 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                 onClose={() => setOpen(false)}
                 PaperProps={{
                     sx: {
-                        width: 500,             
-                        p: 3,                  
-                        borderRadius: 3,        
+                        width: 500,
+                        p: 3,
+                        borderRadius: 3,
                     },
                 }}
             >
@@ -110,7 +118,7 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                     sx={{
                         fontSize: 20,
                         fontWeight: 700,
-                        mb: 1,               
+                        mb: 1,
                     }}
                 >
                     Edit Task
@@ -121,7 +129,7 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
-                        minWidth: 400,         
+                        minWidth: 400,
                     }}
                 >
                     <TextField
@@ -178,6 +186,9 @@ export default function TaskCard({ task, backgroundColor, refreshPage }) {
                 </DialogContent>
 
                 <DialogActions sx={{ mt: 2 }}>
+                    <Button variant="contained" color="error" onClick={() => handleDeleteTask()}>
+                        Delete
+                    </Button>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
                     <Button variant="contained" onClick={() => handleUpdateTask()}>
                         Save
